@@ -2,14 +2,14 @@ package api;
 
 public class NodeDataImpl implements NodeData {
     GeoLocation geoLocation;
-    int key; // nodeID
+    int node_id; // key
     int tag;  // color
     double node_weight;
     String remark; // meta data
 
     public NodeDataImpl(GeoLocation geoLocation, int node_id, int tag, double node_weight, String remark) {
         this.geoLocation = geoLocation;
-        this.key = node_id;
+        this.node_id = node_id;
         this.tag = tag;
         this.node_weight = node_weight;
         this.remark = remark;
@@ -17,7 +17,7 @@ public class NodeDataImpl implements NodeData {
 
     @Override
     public int getKey() {
-        return this.key;
+        return this.node_id;
     }
 
     @Override
