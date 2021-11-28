@@ -4,7 +4,6 @@ import java.awt.*;
 public class EdgeDataImpl implements EdgeData {
     private int source, destination, tag;
     private double weight;
-    private Color color;
     private String info;
 
 

@@ -1,65 +1,103 @@
 package api;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
+    private HashMap<Integer, NodeData> node;
+    private HashMap<Integer, HashMap<Integer, EdgeData>> edge;
+    static int c = 0;
+
+    public DirectedWeightedGraphImpl() {
+        this.node = new HashMap<Integer, NodeData>();
+        this.edge = new HashMap<Integer, HashMap<Integer, EdgeData>>();
+    }
+
+    public DirectedWeightedGraphImpl(HashMap<Integer, NodeData> node, HashMap<Integer, HashMap<Integer, EdgeData>> edge) {
+        this.node = node;
+        this.edge = edge;
+    }
+
     @Override
     public NodeData getNode(int key) {
-        return null;
+        return node.get(key);
     }
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return null;
+        return edge.get(src).get(dest);
     }
 
     @Override
     public void addNode(NodeData n) {
-
+        node.put(n.getKey(), n);
+        edge.put(n.getKey(), new HashMap<Integer, EdgeData>());
+        c++;
     }
 
     @Override
     public void connect(int src, int dest, double w) {
-
+        EdgeData e = new EdgeDataImpl(src, dest, w, 0, "hi");
+        edge.get(src).put(dest, e);
+        c++;
     }
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return null;
+        return node.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return null;
+        ArrayList<EdgeData> arr = new ArrayList<EdgeData>();
+        for (int i : edge.keySet()) {
+            for (int j : edge.get(i).keySet()) {
+                arr.add(edge.get(i).get(j));
+            }
+        }
+        return arr.iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return null;
+        return edge.get(node_id).values().iterator();
     }
 
     @Override
     public NodeData removeNode(int key) {
-        return null;
+        c -= edge.get(key).size();
+        edge.remove(key);
+        for (int i : edge.keySet()) {
+            edge.get(i).remove(key);
+            c--;
+        }
+        c--;
+        return node.remove(key);
     }
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        return null;
+        c--;
+        return edge.get(src).remove(dest);
     }
 
     @Override
     public int nodeSize() {
-        return 0;
+        return node.size();
     }
 
     @Override
     public int edgeSize() {
-        return 0;
+        int sum = 0;
+        for (int i : edge.keySet()) {
+            sum += edge.get(i).size();
+        }
+        return sum;
     }
 
     @Override
     public int getMC() {
-        return 0;
+        return c;
     }
 }
