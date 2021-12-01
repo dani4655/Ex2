@@ -1,6 +1,7 @@
 package api;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
@@ -22,12 +23,36 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public DirectedWeightedGraph copy() {
-        DirectedWeightedGraphImpl aa = (DirectedWeightedGraphImpl)this.graph;
+        Iterator<EdgeData> edgeDataIterator = graph.edgeIter();
+        Iterator<NodeData> nodeDataIterator = graph.nodeIter();
+        DirectedWeightedGraph nDWG = new DirectedWeightedGraphImpl();
+        while (nodeDataIterator.hasNext()) {
+            nDWG.addNode(nodeDataIterator.next());
+        }
+        while (edgeDataIterator.hasNext()) {
+            EdgeData edgei = edgeDataIterator.next();
+            int src= edgei.getSrc(), dst= edgei.getDest();
+            double weight = edgei.getWeight();
+            nDWG.connect(src,dst,weight);
+        }
+        DirectedWeightedGraphImpl aa = (DirectedWeightedGraphImpl) this.graph;
         HashMap<Integer, NodeData> node = aa.getNodes();
         HashMap<Integer, HashMap<Integer, EdgeData>> edge = aa.getEdges();
-        DirectedWeightedGraph newgraph = new DirectedWeightedGraphImpl(node,edge);
+        DirectedWeightedGraph newgraph = new DirectedWeightedGraphImpl(node, edge);
         return newgraph;
     }
+
+    private NodeDataImpl copy(int id) {
+        NodeDataImpl nNodeData = new NodeDataImpl(this.graph.getNode(id).getLocation(), id, graph.getNode(id).getTag(),
+                graph.getNode(id).getWeight(), graph.getNode(id).getInfo());
+        return nNodeData;
+    }
+    private EdgeDataImpl copy(int src, int dst){
+        EdgeDataImpl nEdgeData= new EdgeDataImpl(src, dst, graph.getEdge(src, dst).getWeight(),
+                graph.getEdge(src,dst).getTag() , graph.getEdge(src,dst).getInfo());
+        return nEdgeData;
+    }
+
 
     @Override
     public boolean isConnected() {

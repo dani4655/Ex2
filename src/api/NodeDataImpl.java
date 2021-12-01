@@ -15,14 +15,14 @@ public class NodeDataImpl implements NodeData {
         this.remark = remark;
     }
 
-    /**this function returns new deep copy of NodeDataImpl
+/*    *//**this function returns new deep copy of NodeDataImpl
      *
      * @return NodeDataImpl
-     */
-    public NodeDataImpl copy(){
-        NodeDataImpl nNodeData = new NodeDataImpl(geoLocation, node_id, tag,node_weight, remark);
-        return nNodeData;
-    }
+     *//*
+//    public NodeDataImpl copy(){
+//        NodeDataImpl nNodeData = new NodeDataImpl(geoLocation, node_id, tag,node_weight, remark);
+//        return nNodeData;
+//    }*/
 
     @Override
     public int getKey() {

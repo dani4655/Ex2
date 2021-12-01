@@ -102,11 +102,4 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         return c;
     }
 
-    public HashMap<Integer, NodeData> getNodes() {
-        return node;
-    }
-
-    public HashMap<Integer, HashMap<Integer, EdgeData>> getEdges() {
-        return edge;
-    }
 }
