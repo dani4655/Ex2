@@ -1,5 +1,7 @@
 package api;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class NodeDataImplTest {
@@ -7,6 +9,15 @@ class NodeDataImplTest {
     GeoLocationImpl p2= new GeoLocationImpl(3.5,22,20);
     NodeDataImpl nodeData = new NodeDataImpl(p1, 1, 5, 5.5, "meta");
 
+    @Test
+    void copy(){
+        assertNotEquals(nodeData, nodeData.copy());
+        NodeDataImpl a= nodeData.copy();
+        assertEquals(a.getInfo(),nodeData.getInfo());
+        assertEquals(a.getLocation(),nodeData.getLocation());
+        assertEquals(a.getWeight(),nodeData.getWeight());
+        assertEquals(a.getTag(),nodeData.getTag());
+    }
 
     @org.junit.jupiter.api.Test
     void getKey() {
@@ -16,15 +27,15 @@ class NodeDataImplTest {
 
     @org.junit.jupiter.api.Test
     void getLocation() {
-        assertEquals(p1,nodeData.geoLocation);
-        assertNotEquals(p2,nodeData.geoLocation);
+        assertEquals(p1,nodeData.getLocation());
+        assertNotEquals(p2,nodeData.getLocation());
     }
 
     @org.junit.jupiter.api.Test
     void setLocation() {
         nodeData.setLocation(p2);
-        assertEquals(p2,nodeData.geoLocation);
-        assertNotEquals(p1,nodeData.geoLocation);
+        assertEquals(p2,nodeData.getLocation());
+        assertNotEquals(p1,nodeData.getLocation());
     }
 
     @org.junit.jupiter.api.Test

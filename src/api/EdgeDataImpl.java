@@ -15,6 +15,14 @@ public class EdgeDataImpl implements EdgeData {
         this.info= info;
     }
 
+    /**this function creates a depp copy of an EdgeData
+     *
+     * @return EdgeData
+     */
+    public EdgeDataImpl copy(){
+        EdgeDataImpl nEdgeData= new EdgeDataImpl(source, destination, weight, tag ,info);
+        return nEdgeData;
+    }
     @Override
     public int getSrc() {
         return this.source;

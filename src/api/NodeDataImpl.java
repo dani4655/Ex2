@@ -1,11 +1,11 @@
 package api;
 
 public class NodeDataImpl implements NodeData {
-    GeoLocation geoLocation;
-    int node_id; // key
-    int tag;  // color
-    double node_weight;
-    String remark; // meta data
+    private GeoLocation geoLocation;
+    private int node_id; // key
+    private int tag;  // color
+    private double node_weight;
+    private String remark; // meta data
 
     public NodeDataImpl(GeoLocation geoLocation, int node_id, int tag, double node_weight, String remark) {
         this.geoLocation = geoLocation;
@@ -13,6 +13,15 @@ public class NodeDataImpl implements NodeData {
         this.tag = tag;
         this.node_weight = node_weight;
         this.remark = remark;
+    }
+
+    /**this function returns new deep copy of NodeDataImpl
+     *
+     * @return NodeDataImpl
+     */
+    public NodeDataImpl copy(){
+        NodeDataImpl nNodeData = new NodeDataImpl(geoLocation, node_id, tag,node_weight, remark);
+        return nNodeData;
     }
 
     @Override
