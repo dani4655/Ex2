@@ -7,7 +7,7 @@ import java.util.Iterator;
 public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> node;
     private HashMap<Integer, HashMap<Integer, EdgeData>> edge;
-    static int c = 0;
+    private static int c = 0;
 
     public DirectedWeightedGraphImpl() {
         this.node = new HashMap<Integer, NodeData>();
@@ -99,5 +99,13 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     @Override
     public int getMC() {
         return c;
+    }
+
+    public HashMap<Integer, NodeData> getNodes() {
+        return node;
+    }
+
+    public HashMap<Integer, HashMap<Integer, EdgeData>> getEdges() {
+        return edge;
     }
 }

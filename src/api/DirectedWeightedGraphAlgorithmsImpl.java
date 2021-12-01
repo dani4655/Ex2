@@ -1,20 +1,32 @@
 package api;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
+    private DirectedWeightedGraph graph;
+
+    public DirectedWeightedGraphAlgorithmsImpl(DirectedWeightedGraph graph) {
+        this.graph = new DirectedWeightedGraphImpl();
+    }
+
     @Override
     public void init(DirectedWeightedGraph g) {
+        this.graph = g;
     }
 
     @Override
     public DirectedWeightedGraph getGraph() {
-        return null;
+        return this.graph;
     }
 
     @Override
     public DirectedWeightedGraph copy() {
-        return null;
+        DirectedWeightedGraphImpl aa = (DirectedWeightedGraphImpl)this.graph;
+        HashMap<Integer, NodeData> node = aa.getNodes();
+        HashMap<Integer, HashMap<Integer, EdgeData>> edge = aa.getEdges();
+        DirectedWeightedGraph newgraph = new DirectedWeightedGraphImpl(node,edge);
+        return newgraph;
     }
 
     @Override
