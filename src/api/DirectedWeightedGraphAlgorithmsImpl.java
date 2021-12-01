@@ -2,6 +2,7 @@ package api;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
@@ -33,7 +34,6 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         }
         while (edgeDataIterator.hasNext()) {
             EdgeData edgei = edgeDataIterator.next();
-//            edgei = copy(edgei.getSrc(), edgei.getDest());
             int src= edgei.getSrc(), dst= edgei.getDest();
             double weight = edgei.getWeight();
             nDWG.connect(src,dst,weight);
@@ -48,16 +48,42 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
                 graph.getNode(id).getWeight(), graph.getNode(id).getInfo());
         return nNodeData;
     }
-/*    private EdgeDataImpl copy(int src, int dst){
-        EdgeDataImpl nEdgeData= new EdgeDataImpl(src, dst, graph.getEdge(src, dst).getWeight(),
-                graph.getEdge(src,dst).getTag() , graph.getEdge(src,dst).getInfo());
-        return nEdgeData;
-    }*/
 
 
     @Override
     public boolean isConnected() {
-        return false;
+        int num = graph.nodeSize();
+        if (num == 0)
+            return true;
+        LinkedList<Integer> queue = new LinkedList<Integer>();
+        int v = graph.nodeIter().next().getKey();
+        int color[] = new int[num]; //0 = white, 1 = gray, 2 = black
+            if (color[v] == 0) {
+                color[v] = 1; //gray
+                queue.add(v);
+                BFS(queue, color);
+        }
+        for (int i = 0; i < num; i++) {
+            if (color[i] == 0)
+                return false;
+        }
+        return true;
+    }
+
+    private boolean BFS(LinkedList<Integer> queue, int[] color) {
+        if (queue.isEmpty())
+            return true;
+        int v = queue.poll();
+        Iterator<EdgeData> ei = graph.edgeIter(v);
+        while (ei.hasNext()) {
+            int dest = ei.next().getDest();
+            if (color[dest] == 0) {
+                color[dest] = 1; //gray
+                queue.add(dest);
+            }
+        }
+        color[v] = 3; //black
+        return BFS(queue, color);
     }
 
     @Override
