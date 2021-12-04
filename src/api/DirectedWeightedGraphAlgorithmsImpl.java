@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-import com.google.gson.*;
+//import com.google.gson.*;
 
 public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     private DirectedWeightedGraph graph;
@@ -126,8 +126,46 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
     }
 
     @Override
-    public NodeData center() {
-        return null;
+    public NodeData center() { //O(n^3)
+        if (!isConnected())
+            return null;
+        int inf = Integer.MAX_VALUE;
+        int N = graph.nodeSize();
+        int E = graph.edgeSize();
+        int[][] mat = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                mat[i][j] = inf;
+                if(i == j)
+                    mat [i][j] = 0;
+            }
+        }
+        for (int i = 0; i < E; i++) {
+            int x = graph.edgeIter().next().getSrc();
+            int y = graph.edgeIter().next().getDest();
+            mat[x][y] = 1;
+        }
+        for (int k = 0; k < N; k++) {
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    int a = inf;
+                    if (mat[i][k] != inf || mat[k][j] != inf)
+                        a = mat[i][k] + mat[k][j];
+                    mat[i][j] = Math.min(mat[i][j], a);
+                }
+            }
+        }
+        int min = mat[0][0];
+        int src = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (mat[i][j] < min) {
+                    min = mat[i][j];
+                    src = i;
+                }
+            }
+        }
+        return graph.getNode(src);
     }
 
     @Override
@@ -142,7 +180,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public boolean load(String file) {
-        try {
+/*        try {
 //            String s = "{'src':'w':'dest'}";
             Gson gson = new Gson();
 //            DirectedWeightedGraph gra;
@@ -152,7 +190,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             reader.close();
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
         return false;
     }
 }
