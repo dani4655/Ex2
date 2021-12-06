@@ -102,4 +102,11 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         return c;
     }
 
+    @Override
+        public String toString() {
+            return "DirectedWeightedGraphImpl{" +
+                    "node=" + "\n" + node  +
+                    ", edge=" + edge +
+                    '}';
+        }
 }

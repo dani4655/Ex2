@@ -1,15 +1,27 @@
 package api;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
-//import com.google.gson.*;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     private DirectedWeightedGraph graph;
 
     public DirectedWeightedGraphAlgorithmsImpl(DirectedWeightedGraph graph) {
+        this.graph = graph;
+    }
+
+    public DirectedWeightedGraphAlgorithmsImpl() {
         this.graph = new DirectedWeightedGraphImpl();
     }
+
 
     @Override
     public void init(DirectedWeightedGraph g) {
@@ -185,7 +197,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public NodeData center() { //O(n^3)
-        if (!isConnected())
+/*        if (!isConnected())
             return null;
         int inf = Integer.MAX_VALUE;
         int N = graph.nodeSize();
@@ -223,7 +235,8 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
                 }
             }
         }
-        return graph.getNode(src);
+        return graph.getNode(src);*/
+        return null;
     }
 
     @Override
@@ -238,17 +251,20 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public boolean load(String file) {
-/*        try {
-//            String s = "{'src':'w':'dest'}";
-            Gson gson = new Gson();
-//            DirectedWeightedGraph gra;
-            Reader reader = Files.newBufferedReader(Paths.get("data/G1.json"));
-            DirectedWeightedGraphAlgorithms gra = gson.fromJson(reader, DirectedWeightedGraphAlgorithms.class);
-            System.out.println(gra.toString());
-            reader.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }*/
-        return false;
+        try {
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(DirectedWeightedGraphImpl.class, new toJson());
+            Gson gson = builder.create();
+
+            FileReader reader = new FileReader(file);
+            this.graph = gson.fromJson(reader, DirectedWeightedGraphImpl.class);
+            System.out.println(this.graph.toString());
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
+
+
 }

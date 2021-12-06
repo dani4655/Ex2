@@ -59,4 +59,15 @@ public class EdgeDataImpl implements EdgeData {
     public void setTag(int t) {
         this.tag=t;
     }
+
+    @Override
+    public String toString() {
+        return "EdgeDataImpl{" +
+                "source=" + source +
+                ", destination=" + destination +
+                ", tag=" + tag +
+                ", weight=" + weight +
+                ", info='" + info + '\'' +
+                '}' + "\n";
+    }
 }

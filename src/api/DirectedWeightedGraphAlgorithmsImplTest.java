@@ -112,6 +112,7 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void load() {
+        boazBenMoshe.load("dd");
     }
 
     public static void main(String[] args) {

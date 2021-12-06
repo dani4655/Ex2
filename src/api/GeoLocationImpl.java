@@ -29,4 +29,13 @@ public class GeoLocationImpl implements GeoLocation {
     public double distance(GeoLocation g) {
         return Math.sqrt(Math.pow(x - g.x(), 2) + Math.pow(y - g.y(), 2) + Math.pow(z - g.z(), 2));
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}' + "\n";
+    }
 }

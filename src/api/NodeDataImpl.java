@@ -5,17 +5,28 @@ public class NodeDataImpl implements NodeData {
     private int node_id; // key
     private int tag;  // color
     private double node_weight;
-    private String remark; // meta data
+    private String info; // meta data
 
     public NodeDataImpl(GeoLocation geoLocation, int node_id, int tag, double node_weight, String remark) {
         this.geoLocation = geoLocation;
         this.node_id = node_id;
         this.tag = tag;
         this.node_weight = node_weight;
-        this.remark = remark;
+        this.info = remark;
     }
 
-/*    *//**this function returns new deep copy of NodeDataImpl
+    public NodeDataImpl(GeoLocation g , int id) {
+        this.node_id = id;
+        this.node_weight = 0;
+        this.tag = 0;
+        this.info = "";
+        this.geoLocation = g;
+    }
+
+    /*    */
+
+    /**
+     * this function returns new deep copy of NodeDataImpl
      *
      * @return NodeDataImpl
      *//*
@@ -23,7 +34,6 @@ public class NodeDataImpl implements NodeData {
 //        NodeDataImpl nNodeData = new NodeDataImpl(geoLocation, node_id, tag,node_weight, remark);
 //        return nNodeData;
 //    }*/
-
     @Override
     public int getKey() {
         return this.node_id;
@@ -53,12 +63,12 @@ public class NodeDataImpl implements NodeData {
 
     @Override
     public String getInfo() {
-        return this.remark;
+        return this.info;
     }
 
     @Override
     public void setInfo(String s) {
-        this.remark = s;
+        this.info = s;
     }
 
     @Override
@@ -69,5 +79,16 @@ public class NodeDataImpl implements NodeData {
     @Override
     public void setTag(int t) {
         this.tag = t;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "geoLocation=" + geoLocation +
+                ", node_id=" + node_id +
+                ", tag=" + tag +
+                ", node_weight=" + node_weight +
+                ", info='" + info + '\'' +
+                '}' + "\n";
     }
 }
