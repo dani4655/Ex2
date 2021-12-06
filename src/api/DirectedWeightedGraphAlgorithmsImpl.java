@@ -8,8 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+/*import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;*/
 
 public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     private DirectedWeightedGraph graph;
@@ -177,17 +177,19 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        if (!isConnected())
-            return -1;
         DirectedWeightedGraph ng = dijkstra(this.graph.getNode(src));
         int a = dest;
         double length = 0;
+        if (this.graph.getNode(src)==null || this.graph.getNode(dest)==null)
+            return -1;
         while(a!=src){
             int b=a;
             a=ng.getNode(a).getTag();
             length += ng.getEdge(b,a).getWeight();
         }
         return length;
+
+
     }
 
     @Override
@@ -251,7 +253,8 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public boolean load(String file) {
-        try {
+        return false;
+   /*     try {
             GsonBuilder builder = new GsonBuilder();
             builder.registerTypeAdapter(DirectedWeightedGraphImpl.class, new toJson());
             Gson gson = builder.create();
@@ -263,7 +266,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
-        }
+        }*/
     }
 
 
