@@ -1,8 +1,5 @@
 package api;
 
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 //import com.google.gson.*;
@@ -45,6 +42,12 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         return nDWG;
     }
 
+    /**
+     * makes a deep copy from and id of given nodeData
+     *
+     * @param id
+     * @return nodeDataImpl
+     */
     private NodeDataImpl copy(int id) {
         NodeDataImpl nNodeData = new NodeDataImpl(this.graph.getNode(id).getLocation(), id, graph.getNode(id).getTag(),
                 graph.getNode(id).getWeight(), graph.getNode(id).getInfo());
@@ -115,9 +118,64 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         return true;
     }
 
+    private DirectedWeightedGraph dijkstra(NodeData src) {
+        DirectedWeightedGraph ng = this.copy();
+        maxValue(ng);
+        ng.getNode(src.getKey()).setWeight(0);
+        PriorityQueue<NodeData> q = new PriorityQueue<>();
+        Iterator<NodeData> iter = ng.nodeIter();
+        while (!iter.hasNext()){
+            q.add(iter.next());
+        }
+        while (!q.isEmpty()) {
+            NodeData cn = q.poll();
+            if (q.peek() != null && q.peek().getWeight() < ng.getNode(src.getKey()).getWeight()) {
+                q.add(ng.getNode(src.getKey()));
+                cn = q.poll();
+            }
+            Iterator<EdgeData> e = ng.edgeIter(cn.getKey());
+            while (e.hasNext()){
+                relax(e.next(),ng);
+            }
+        }
+        return ng;
+    }
+
+    /**this function is the relax function for dijkstra algorithm
+     *
+     * @param e
+     */
+    private void relax(EdgeData e, DirectedWeightedGraph ng) {
+        if (ng.getNode(e.getDest()).getWeight()>ng.getNode(e.getSrc()).getWeight()+e.getWeight()){
+            ng.getNode(e.getDest()).setWeight(ng.getNode(e.getSrc()).getWeight()+e.getWeight());
+            ng.getNode(e.getDest()).setTag(e.getSrc());
+        }
+    }
+
+    /**this function init the graph to be max int for each vertex in the graph
+     *
+     */
+    private void maxValue(DirectedWeightedGraph ng) {
+        Iterator<NodeData> iter = ng.nodeIter();
+        while (!iter.hasNext()){
+            ng.nodeIter().next().setWeight(Integer.MAX_VALUE);
+            ng.nodeIter().next().setTag(-1);
+        }
+    }
+
     @Override
     public double shortestPathDist(int src, int dest) {
-        return 0;
+        if (!isConnected())
+            return -1;
+        DirectedWeightedGraph ng = dijkstra(this.graph.getNode(src));
+        int a = dest;
+        double length = 0;
+        while(a!=src){
+            int b=a;
+            a=ng.getNode(a).getTag();
+            length += ng.getEdge(b,a).getWeight();
+        }
+        return length;
     }
 
     @Override
@@ -136,8 +194,8 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 mat[i][j] = inf;
-                if(i == j)
-                    mat [i][j] = 0;
+                if (i == j)
+                    mat[i][j] = 0;
             }
         }
         for (int i = 0; i < E; i++) {

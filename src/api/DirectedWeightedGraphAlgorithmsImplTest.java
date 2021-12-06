@@ -3,7 +3,9 @@ package api;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -110,5 +112,37 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void load() {
+    }
+
+    public static void main(String[] args) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        int a=1, b=2, c=3, d=4;
+        pq.add(a);
+        pq.add(b);
+        pq.add(c);
+        pq.add(d);
+        pq.remove(a);
+        System.out.println(pq.size());
+        System.out.println(pq.iterator().next());
+        System.out.println(pq);
+        pq.add(a);
+        System.out.println(pq);
+        pq.add(2);
+        System.out.println(pq);
+        System.out.println(pq.remove(c));
+        System.out.println(pq);
+        pq.poll();
+        System.out.println(pq.peek());
+        System.out.println(pq);
+        pq.poll();
+        System.out.println(pq);
+        System.out.println(pq.peek());
+        pq.poll();
+        System.out.println(pq);
+        System.out.println(pq.peek());
+        pq.poll();
+        System.out.println(pq.isEmpty());
+        System.out.println(pq);
+        pq.poll();
     }
 }
