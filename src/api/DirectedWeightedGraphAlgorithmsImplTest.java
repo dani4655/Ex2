@@ -23,6 +23,10 @@ class DirectedWeightedGraphAlgorithmsImplTest {
     DirectedWeightedGraphAlgorithmsImpl boazBenMoshe = new DirectedWeightedGraphAlgorithmsImpl(dwg);
     DirectedWeightedGraphImpl dg = new DirectedWeightedGraphImpl();
 
+    NodeDataImpl np1 = new NodeDataImpl(new GeoLocationImpl(0,0,0),0,0,1.5,"");
+    NodeDataImpl np2 = new NodeDataImpl(new GeoLocationImpl(1,1,0), 1, 1, 3,"");
+    NodeDataImpl np3 = new NodeDataImpl(new GeoLocationImpl(3,5,0), 2, 2, 5,"");
+    DirectedWeightedGraph dg2= new DirectedWeightedGraphImpl();
 
     @BeforeEach
     void setup(){
@@ -41,6 +45,20 @@ class DirectedWeightedGraphAlgorithmsImplTest {
         dg.connect(e2.getSrc(),e2.getDest(),e2.getWeight());
         dg.getEdge(e2.getSrc(),e2.getDest()).setTag(tag);
         dg.getEdge(e2.getSrc(),e2.getDest()).setInfo(s);
+        DirectedWeightedGraphAlgorithmsImpl boaz = new DirectedWeightedGraphAlgorithmsImpl(dg);
+        dg2.addNode(np1);
+        dg2.addNode(np2);
+        dg2.addNode(np3);
+
+        dg2.connect(0,1,np1.getLocation().distance(np2.getLocation()));
+        dg2.connect(0,2,np1.getLocation().distance(np3.getLocation()));
+        dg2.connect(1,0,np2.getLocation().distance(np1.getLocation()));
+        dg2.connect(1,2,np2.getLocation().distance(np3.getLocation()));
+        dg2.connect(2,0,np3.getLocation().distance(np1.getLocation()));
+        dg2.connect(2,1,np3.getLocation().distance(np2.getLocation()));
+        dg2.connect(0,0,np1.getLocation().distance(np1.getLocation()));
+        dg2.connect(1,1,np2.getLocation().distance(np2.getLocation()));
+        dg2.connect(2,2,np3.getLocation().distance(np3.getLocation()));
 
     }
 
@@ -60,8 +78,8 @@ class DirectedWeightedGraphAlgorithmsImplTest {
         dtest.init(dg);
         DirectedWeightedGraph d = dtest.copy();
         assertNotEquals(d,dg);
-        System.out.println(d.edgeSize()+" "+dg.edgeSize());
-        System.out.println(d.getNode(0).getKey()+" "+dg.getNode(0).getKey());
+//        System.out.println(d.edgeSize()+" "+dg.edgeSize());
+//        System.out.println(d.getNode(0).getKey()+" "+dg.getNode(0).getKey());
         assertEquals(d.edgeSize(),dg.edgeSize());
         assertNotEquals(d.getNode(0),dg.getNode(0));
         assertEquals(d.getNode(0).getTag(), dg.getNode(0).getTag());
@@ -88,10 +106,19 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void isConnected() {
+        DirectedWeightedGraphAlgorithmsImpl dtest = new DirectedWeightedGraphAlgorithmsImpl(dg);
+        assertFalse(dtest.isConnected());
+        DirectedWeightedGraphAlgorithmsImpl fargah = new DirectedWeightedGraphAlgorithmsImpl(dg2);
+        assertTrue(fargah.isConnected());
+
     }
 
     @Test
     void shortestPathDist() {
+        DirectedWeightedGraphAlgorithmsImpl dtest = new DirectedWeightedGraphAlgorithmsImpl(dg);
+        double le= dtest.shortestPathDist(0,0);
+        assertEquals(le,0);
+
     }
 
     @Test
@@ -100,6 +127,8 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void center() {
+        DirectedWeightedGraphAlgorithmsImpl g1 = new DirectedWeightedGraphAlgorithmsImpl(dg2);
+
     }
 
     @Test
@@ -112,38 +141,10 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void load() {
-        boazBenMoshe.load("dd");
+        boazBenMoshe.load("data/G1.json");
     }
 
     public static void main(String[] args) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        int a=1, b=2, c=3, d=4;
-        pq.add(a);
-        pq.add(b);
-        pq.add(c);
-        pq.add(d);
-        pq.remove(a);
-        System.out.println(pq.size());
-        System.out.println(pq.iterator().next());
-        System.out.println(pq);
-        pq.add(a);
-        System.out.println(pq);
-        pq.add(2);
-        System.out.println(pq);
-        System.out.println(pq.remove(c));
-        System.out.println(pq);
-        pq.poll();
-        System.out.println(pq.peek());
-        System.out.println(pq);
-        pq.poll();
-        System.out.println(pq);
-        System.out.println(pq.peek());
-        pq.poll();
-        System.out.println(pq);
-        System.out.println(pq.peek());
-        pq.poll();
-        System.out.println(pq.isEmpty());
-        System.out.println(pq);
-        pq.poll();
+
     }
 }
