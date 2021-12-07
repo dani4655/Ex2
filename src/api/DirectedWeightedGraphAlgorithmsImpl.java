@@ -1,13 +1,9 @@
 package api;
 
 import java.io.*;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 
 public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     private DirectedWeightedGraph graph;
@@ -302,10 +298,10 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
     @Override
     public boolean save(String file) {
         GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
-        String str = builder.create().toJson(this.graph);
         try {
             PrintWriter p = new PrintWriter(new File(file));
-            p.write(str);
+            graphForJson g = new graphForJson(this.graph);
+            p.write(builder.create().toJson(g));
             p.close();
             return true;
         } catch (FileNotFoundException e) {
@@ -323,7 +319,6 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
             FileReader reader = new FileReader(file);
             this.graph = gson.fromJson(reader, DirectedWeightedGraphImpl.class);
-//            System.out.println(this.graph.toString());
             return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

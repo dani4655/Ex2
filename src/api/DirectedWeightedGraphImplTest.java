@@ -124,8 +124,8 @@ class DirectedWeightedGraphImplTest {
         de.addNode(nodea);
         de.addNode(nodeData);
         de.connect(4,2,1.0);
-        assertEquals(11,de.getMC()); // 3
-        de.removeEdge(4,2);
-        assertEquals(10,de.getMC()); // 2
+        assertEquals(3,de.getMC());
+        de.removeNode(4);
+        assertEquals(5,de.getMC());
     }
 }

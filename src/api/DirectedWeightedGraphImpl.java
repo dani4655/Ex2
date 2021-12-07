@@ -8,7 +8,7 @@ import java.util.Iterator;
 public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     private HashMap<Integer, NodeData> node;
     private HashMap<Integer, HashMap<Integer, EdgeData>> edge;
-    private static int c = 0;
+    private int c = 0;
 
     public DirectedWeightedGraphImpl() {
         this.node = new HashMap<Integer, NodeData>();
@@ -46,7 +46,25 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return node.values().iterator();
+        Iterator<NodeData> iter = new Iterator<NodeData>() {
+            final int s = c;
+            Iterator<NodeData> iterator = node.values().iterator();
+
+            @Override
+            public boolean hasNext() {
+                if (s != c)
+                    throw new RuntimeException("RuntimeException");
+                return iterator.hasNext();
+            }
+
+            @Override
+            public NodeData next() {
+                if (s != c)
+                    throw new RuntimeException("RuntimeException");
+                return iterator.next();
+            }
+        };
+        return iter;
     }
 
     @Override
@@ -57,7 +75,25 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
                 arr.add(edge.get(i).get(j));
             }
         }
-        return arr.iterator();
+        Iterator<EdgeData> iter = new Iterator<EdgeData>() {
+            final int s = c;
+            Iterator<EdgeData> iterator = arr.iterator();
+
+            @Override
+            public boolean hasNext() {
+                if (s != c)
+                    throw new RuntimeException("RuntimeException");
+                return iterator.hasNext();
+            }
+
+            @Override
+            public EdgeData next() {
+                if (s != c)
+                    throw new RuntimeException("RuntimeException");
+                return iterator.next();
+            }
+        };
+        return iter;
     }
 
     @Override
@@ -67,19 +103,19 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public NodeData removeNode(int key) {
-        c -= edge.get(key).size();
+        c += edge.get(key).size();
         edge.remove(key);
         for (int i : edge.keySet()) {
-            edge.get(i).remove(key);
-            c--;
+            if (edge.get(i).remove(key) != null)
+                c++;
         }
-        c--;
+        c++;
         return node.remove(key);
     }
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        c--;
+        c++;
         return edge.get(src).remove(dest);
     }
 
@@ -103,10 +139,10 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     }
 
     @Override
-        public String toString() {
-            return "DirectedWeightedGraphImpl{" +
-                    "node=" + "\n" + node  +
-                    ", edge=" + edge +
-                    '}';
-        }
+    public String toString() {
+        return "DirectedWeightedGraphImpl{" +
+                "node=" + "\n" + node +
+                ", edge=" + edge +
+                '}';
+    }
 }
