@@ -46,6 +46,9 @@ class DirectedWeightedGraphAlgorithmsImplTest {
         dg.getEdge(e2.getSrc(),e2.getDest()).setTag(tag);
         dg.getEdge(e2.getSrc(),e2.getDest()).setInfo(s);
         DirectedWeightedGraphAlgorithmsImpl boaz = new DirectedWeightedGraphAlgorithmsImpl(dg);
+        dg2.addNode(np1);
+        dg2.addNode(np2);
+        dg2.addNode(np3);
 
         dg2.connect(0,1,np1.getLocation().distance(np2.getLocation()));
         dg2.connect(0,2,np1.getLocation().distance(np3.getLocation()));
@@ -75,8 +78,8 @@ class DirectedWeightedGraphAlgorithmsImplTest {
         dtest.init(dg);
         DirectedWeightedGraph d = dtest.copy();
         assertNotEquals(d,dg);
-        System.out.println(d.edgeSize()+" "+dg.edgeSize());
-        System.out.println(d.getNode(0).getKey()+" "+dg.getNode(0).getKey());
+//        System.out.println(d.edgeSize()+" "+dg.edgeSize());
+//        System.out.println(d.getNode(0).getKey()+" "+dg.getNode(0).getKey());
         assertEquals(d.edgeSize(),dg.edgeSize());
         assertNotEquals(d.getNode(0),dg.getNode(0));
         assertEquals(d.getNode(0).getTag(), dg.getNode(0).getTag());
@@ -124,6 +127,8 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void center() {
+        DirectedWeightedGraphAlgorithmsImpl g1 = new DirectedWeightedGraphAlgorithmsImpl(dg2);
+
     }
 
     @Test
@@ -136,7 +141,7 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void load() {
-        boazBenMoshe.load("dd");
+        boazBenMoshe.load("data/G1.json");
     }
 
     public static void main(String[] args) {
