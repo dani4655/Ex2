@@ -193,6 +193,8 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         if (src == dest)
             return 0.0;
         DirectedWeightedGraph ng = dijkstra(this.graph.getNode(src));
+        if (ng.getNode(src)==null || ng.getNode(dest)== null)
+            return -1;
         int a = dest;
         double length = 0;
         while (a != src) {
@@ -218,6 +220,9 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             list.add(ng.getNode(a));
         }
         Collections.reverse(list);
+        int last= list.get(0).getKey();
+        if(last!=src)
+            return null;
         return list;
     }
 
