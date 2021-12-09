@@ -72,14 +72,14 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         Iterator<NodeData> iter = graph.nodeIter();
         while (iter.hasNext()) { //add all nodes and set to 0
             int n = iter.next().getKey();
-            color.put(n,0);
+            color.put(n, 0);
         }
         color.remove(v);
-        color.put(v,1); //gray
+        color.put(v, 1); //gray
         queue.add(v);
         BFS(queue, color, this.graph);
 
-        for (int i: color.keySet()) {
+        for (int i : color.keySet()) {
             if (color.get(i) == 0)
                 return false;
         }
@@ -98,12 +98,12 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             int dest = ei.next().getDest();
             if (color.get(dest) == 0) {
                 color.remove(dest);
-                color.put(dest,1) ; //gray
+                color.put(dest, 1); //gray
                 queue.add(dest);
             }
         }
         color.remove(v);
-        color.put(v,3); //black
+        color.put(v, 3); //black
         return BFS(queue, color, this.graph);
     }
 
@@ -125,13 +125,13 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         Iterator<NodeData> iter = g.nodeIter(); //add all nodes and set to 0
         while (iter.hasNext()) {
             int n = iter.next().getKey();
-            color.put(n,0);
+            color.put(n, 0);
         }
         color.remove(v);
-        color.put(v,1); //gray
+        color.put(v, 1); //gray
         q.add(v);
         BFS(q, color, g);
-        for (int i: color.keySet()) {
+        for (int i : color.keySet()) {
             if (color.get(i) == 0)
                 return false;
         }
@@ -291,13 +291,179 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        NodeData s = cities.get(0);
-        boolean visit[] = new boolean[cities.size()];
+        int N = cities.size();
+        List<NodeData> list = new LinkedList<>();
+        List<NodeData> ans = new LinkedList<>();
+        // Create graph (with node lis):
+        DirectedWeightedGraph ng = new DirectedWeightedGraphImpl();
+        for (int i = 0; i < N; i++) { //copy nodes (from list)
+            ng.addNode(cities.get(i));
+        }
+        for (int i = 0; i < N; i++) { //connect nodes
+            int k = cities.get(i).getKey();
+            Iterator<EdgeData> iter = this.graph.edgeIter(k);
+            while (iter.hasNext()) {
+                int n = iter.next().getDest();
+                if (ng.getNode(n) == null)
+                    continue;
+                ng.connect(k, n, graph.getEdge(k, n).getWeight());
+            }
+        }
+        DirectedWeightedGraphAlgorithms d = new DirectedWeightedGraphAlgorithmsImpl(ng);
+        if (!d.isConnected())
+            return null;
+        // make HashMaps for nodes:
+        HashMap<Integer, Integer> valToInt = new HashMap<>();
+        HashMap<Integer, Integer> intToVal = new HashMap<>();
+        Iterator<NodeData> iter = ng.nodeIter();
+        int i = 0;
+        while (iter.hasNext()) {
+            NodeData n = iter.next();
+            valToInt.put(n.getKey(), i);
+            intToVal.put(i, n.getKey());
+            i++;
+        }
         double cost = 0;
-        for (int i = 1; i < cities.size(); i++) {
+        // rec fun:
+        DirectedWeightedGraphAlgorithms a = new DirectedWeightedGraphAlgorithmsImpl(ng);
+        double[][] mat = matFromList(valToInt, intToVal, ng);
+        double min = Double.POSITIVE_INFINITY;
+        for (int j = 0; j < N; j++) {
+            int s = cities.get(j).getKey();
+             cost = 0;
+//            list.add(ng.getNode(s));
+//            ng.getNode(s).setTag(-1);
+            tsprec(a.copy(), list, mat, N, s, valToInt);
+//            if (list.size() == N)
+//                break;
+            if (list.size() == N) {
+                for (int k = 0; k < N - 1; k++) {
+                    cost += ng.getEdge(list.get(k).getKey(), list.get(k + 1).getKey()).getWeight();
+                }
+                if (cost < min) {
+                    min = cost;
+                    for (int k = 0; k < N; k++) {
+                        ans.add(list.get(k));
+                    }
+                }
+                list.clear();
+            }
+//            ng.getNode(s).setWeight(0);
+//            list.remove(ng.getNode(s));
+        }
+        System.out.println(cost);
+        return ans;
+    }
+
+    private List<NodeData> tsprec(DirectedWeightedGraph ng, List<NodeData> list, double[][] mat, int N, int s, HashMap<Integer, Integer> valToInt) {
+        if (list.size() == N)
+            return list;
+        Iterator<EdgeData> iter = ng.edgeIter(s);
+        int key = -1;
+        while (iter.hasNext()) { //go over all the src edges
+
+            EdgeData e = iter.next();
+            key = e.getDest();
+            if (list.contains(ng.getNode(key))) //if visited - pass
+                continue;
+            list.add(ng.getNode(key));
+            tsprec(ng, list, mat, N, key, valToInt);
+            if (list.size() == N)
+                return list;
+        }
+        if (list.contains(ng.getNode(s))) {// remove
+            list.remove(ng.getNode(s));
 
         }
-        return null;
+        return list;
+    }
+//        if (list.size() == N)
+//            return list;
+///*        if (ng.getNode(s) != null)
+//        ng.getNode(s).setWeight(-1.0); //set as visit*/
+//        Iterator<EdgeData> iter = ng.edgeIter(s);
+//        double min = Double.POSITIVE_INFINITY;
+//        int key = -1;
+//        while (iter.hasNext()) {
+//            EdgeData e = iter.next();
+//            if (list.contains(ng.getNode(e.getDest())))
+//                continue;
+//            if (mat[valToInt.get(s)][valToInt.get(e.getDest())] < min) {
+//                if (ng.getEdge(s,e.getDest()).getTag() == -1 || e.getDest() == src) {
+//                    continue;
+//                }
+//                min = mat[valToInt.get(s)][valToInt.get(e.getDest())]; //edge weight (s,dest)
+//                key = e.getDest(); //dest ID
+//            }
+//        }
+//        if (key == -1) { //go back
+//            if (list.size() == 1 ) {
+//                return list;
+//            }
+//            int dad = ng.getNode(s).getTag();
+//
+//            list.remove(ng.getNode(s));
+//            ng.getNode(s).setTag(-1);
+//            if (x != -1 && src != dad && ng.getEdge(s,x) != null) {
+//                Iterator<EdgeData> iterator = ng.edgeIter();
+//                while (iterator.hasNext()) {
+//                    EdgeData e = iterator.next();
+//                    if (!list.contains(ng.getNode(e.getSrc())))
+//                        continue;
+//                    e.setTag(0);
+//                }
+////                ng.getEdge(s, x).setTag(0);
+//            }
+//            return tsprec(ng, list, mat, N, dad, valToInt, s,src);
+//        } else if (key != -1) {
+//            list.add(ng.getNode(key)); //add next node to return list
+//            ng.getNode(key).setTag(s); //set dad
+//            ng.getEdge(s,key).setTag(-1);
+//            return tsprec(ng, list, mat, N, key, valToInt, x,src);
+//        }
+////        int dad = ng.getNode(s).getTag();
+////        if (list.size() == 1)
+////            return list;
+////        list.remove(ng.getNode(s));
+////        ng.getNode(s).setTag(-1);
+////        if (x != -1 && x != src)
+////            ng.getEdge(s,x).setTag(0);
+////
+////        return tsprec(ng, list, mat, N, dad, valToInt, s,src);
+//        return list;
+//    }
+
+    private double[][] matFromList(HashMap<Integer, Integer> valToInt, HashMap<Integer, Integer> intToVal, DirectedWeightedGraph ng) {
+        double inf = Double.POSITIVE_INFINITY;
+        int N = valToInt.size();
+        double[][] mat = new double[N][N];
+        for (int i = 0; i < N; i++) { //make all INF
+            for (int j = 0; j < N; j++) {
+                mat[i][j] = inf;
+                if (i == j)
+                    mat[i][j] = 0;
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            Iterator<EdgeData> iter = ng.edgeIter(intToVal.get(i));
+            while (iter.hasNext()) {
+                EdgeData e = iter.next();
+                int x = valToInt.get(e.getSrc());
+                int y = valToInt.get(e.getDest());
+                mat[x][y] = ng.getEdge(e.getSrc(), e.getDest()).getWeight();
+            }
+        }
+        for (int k = 0; k < N; k++) {
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    double a = inf;
+                    if (mat[i][k] != inf || mat[k][j] != inf)
+                        a = mat[i][k] + mat[k][j];
+                    mat[i][j] = Math.min(mat[i][j], a);
+                }
+            }
+        }
+        return mat;
     }
 
     @Override
