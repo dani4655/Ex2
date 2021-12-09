@@ -231,8 +231,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         if (!isConnected())
             return null;
         int N = graph.nodeSize();
-        double mat[][] = mat();
-
+        double mat[][] = mat(); //shortests path
         double[] src = new double[N];
         for (int i = 0; i < N; i++) {
             double max = mat[i][0];
@@ -260,21 +259,34 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     private double[][] mat() {
         double inf = Double.POSITIVE_INFINITY;
-        int N = graph.nodeSize();
+        int N = this.graph.nodeSize();
+        HashMap<Integer, Integer> valToInt = new HashMap<>();
+        HashMap<Integer, Integer> intToVal = new HashMap<>();
+        Iterator<NodeData> iter = this.graph.nodeIter();
+        int index = 0;
+        while (iter.hasNext()) {
+            NodeData n = iter.next();
+            valToInt.put(n.getKey(), index);
+            intToVal.put(index, n.getKey());
+            index++;
+        }
         double[][] mat = new double[N][N];
-        for (int i = 0; i < N; i++) { //make all INF
+        //make all INF and zero if node to node
+        for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 mat[i][j] = inf;
                 if (i == j)
                     mat[i][j] = 0;
             }
         }
+        //set the init weights
         Iterator<EdgeData> ei = graph.edgeIter();
         while (ei.hasNext()) {
             EdgeData e = ei.next();
-            int x = e.getSrc();
-            int y = e.getDest();
-            mat[x][y] = graph.getEdge(x, y).getWeight();
+            int x = valToInt.get(e.getSrc());
+            int y = valToInt.get(e.getDest());
+            mat[x][y] = this.graph.getEdge(e.getSrc(), e.getDest()).getWeight();
+            //mat[x][y] = graph.getEdge(x, y).getWeight();
         }
         for (int k = 0; k < N; k++) {
             for (int i = 0; i < N; i++) {
