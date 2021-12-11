@@ -1,29 +1,36 @@
-package api.GUIi;
+package api.Gui;
 
 import api.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 public class GraphGUI extends JPanel implements MouseListener {
 
     private MenuBar menuBar;
-    private DirectedWeightedGraph graph = new DirectedWeightedGraphImpl();
-    private DirectedWeightedGraphAlgorithms algorithms = new DirectedWeightedGraphAlgorithmsImpl(graph);
+    private static boolean isEnabled;
+
+    protected static DirectedWeightedGraphAlgorithms algorithms = new DirectedWeightedGraphAlgorithmsImpl();
     private LinkedList<NodeData> a = new LinkedList<>();
 
-    public GraphGUI() {
+    public GraphGUI(MenuBar menuBar) {
+        this.menuBar = menuBar;
         this.addMouseListener(this);
+        isEnabled = false;
+//        radioButtonState="1";
+//        algorithms.load(menuBar.getFilename());
+        this.addMouseListener(this);
+//        this.menuBar.getContentPane().setBackground(new Color(69, 5, 111));
+        this.setBackground(Color.GRAY);
+        this.setMaximumSize(new Dimension(1000,1000));
+        setLayout(null);
+
     }
-
-
+    public DirectedWeightedGraphAlgorithms getAlgorithms(){return algorithms;}
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -32,10 +39,11 @@ public class GraphGUI extends JPanel implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        DirectedWeightedGraph graph = algorithms.getGraph();
         GeoLocation g = new GeoLocationImpl(e.getX(), e.getY(), 0);
         NodeData n = new NodeDataImpl(g, 0);
         a.add(n);
-        this.graph.addNode(n);
+        graph.addNode(n);
         repaint();
     }
 
@@ -53,6 +61,24 @@ public class GraphGUI extends JPanel implements MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
+    public void p(Graphics g) {
+        
+    }
+
+    public void paintGraph(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D G = (Graphics2D) g;
+        g.setColor(new Color(234, 26, 171));
+
+        Iterator<NodeData> iter = algorithms.getGraph().nodeIter();
+        while (iter.hasNext()) {
+            NodeData n = iter.next();
+            g.fillOval((int) n.getLocation().x(), (int) n.getLocation().y(), 20, 20);
+            G.drawString(""+n.getKey(),(int)n.getLocation().x(),(int)n.getLocation().y());
+        }
+
+    }
+
 
     public void paint(Graphics g) {
         super.paintComponent(g);
@@ -72,6 +98,6 @@ public class GraphGUI extends JPanel implements MouseListener {
 
 
     public static void main(String[] args) {
-        new GraphGUI();
+//        new GraphGUI();
     }
 }
