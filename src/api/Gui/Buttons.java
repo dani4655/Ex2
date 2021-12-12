@@ -1,8 +1,13 @@
 package api.Gui;
 
+import api.NodeData;
+import api.NodeDataImpl;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Buttons implements ActionListener {
     private MenuBar menuBar;
@@ -96,8 +101,7 @@ public class Buttons implements ActionListener {
                 if (menuBar.gui.getAlgorithms().load(s)) {
                     JOptionPane.showMessageDialog(null, "You have load the file: \"" + s + "\"");
                     menuBar.gui.paintGraph(menuBar.gui.getGraphics());
-                }
-                else
+                } else
                     JOptionPane.showConfirmDialog(null, menuBar.icon);
 //                JOptionPane.showMessageDialog(null, "load failed.");
             }
@@ -108,14 +112,109 @@ public class Buttons implements ActionListener {
                 else
                     JOptionPane.showMessageDialog(null, "load failed.");
             }
-            //tsp:
-            /*if (menuBar.tsp.isSelected() &&) {
-                if (menuBar.gui.getAlgorithms().tsp(menuBar.textField.))
-                    JOptionPane.showMessageDialog(null, "You have saved the file: \"" + s + "\"");
-                else
-                    JOptionPane.showMessageDialog(null, "load failed.");
-            }*/
+            //shortestPathDist
+            if (menuBar.shortestPathDist.isSelected()) {
+                int src, dest;
+                try {
+                    String sr[] =s.split(",");
+                    src = Integer.parseInt(sr[0]);
+                    dest = Integer.parseInt(sr[1]);
+                    JOptionPane.showMessageDialog(null, "The shortest path dist is: "
+                            + menuBar.gui.getAlgorithms().shortestPathDist(src, dest));
 
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Bad input, enter 'src,dest' or nodes ids that included in the graph");
+                }
+            }
+            //shortestPath
+            if (menuBar.shortestPath.isSelected()){
+                List<NodeData> nodelist;
+                List<String> stringList= new ArrayList<>();
+                int src, dest;
+                try {
+                    String sr[] =s.split(",");
+                    src = Integer.parseInt(sr[0]);
+                    dest = Integer.parseInt(sr[1]);
+                    nodelist = menuBar.gui.getAlgorithms().shortestPath(src, dest);
+                    for (int i = 0; i < nodelist.size(); i++) {
+                        if (i==nodelist.size()-1){
+                            stringList.add(nodelist.get(i).getKey()+"");
+                            continue;
+                        }
+                        stringList.add(nodelist.get(i).getKey()+"->");
+
+                    }
+                    JOptionPane.showMessageDialog(null, "The shortest path is: "
+                            + stringList);
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Bad input, enter 'src,dest' or nodes ids that included in the graph");
+                }
+            }
+            //tsp:
+            if (menuBar.tsp.isSelected()) {
+                List<NodeData> list = new ArrayList<>();
+                List<String> stringList = new ArrayList<>();
+                /*JOptionPane.showMessageDialog(null,
+                        "Enter list of cities (e.g: 0,5,7,8,9,16");*/
+                try {
+                    String[] sr;
+                    sr = s.split(",");
+                    for (int i = 0; i < sr.length; i++) {
+                        list.add(menuBar.gui.getAlgorithms().getGraph().getNode(Integer.parseInt(sr[i])));
+                    }
+                    list = menuBar.gui.getAlgorithms().tsp(list);
+                    for (int i = 0; i < list.size(); i++) {
+                        if (i == list.size() - 1) {
+                            stringList.add(list.get(i).getKey() + "");
+                            continue;
+                        }
+                        stringList.add(list.get(i).getKey() + "->");
+
+                    }
+                    JOptionPane.showMessageDialog(null, "Traveler salesman path is: "
+                            + stringList);
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Bad input, enter 'a1,a2,...,an' or nodes ids that included in the graph");
+                }
+            }
+            //getNode
+            if (menuBar.getNode.isSelected()){
+                try{
+                    int x = Integer.parseInt(s);
+                    JOptionPane.showMessageDialog(null, "Node "+x+
+                            ""+ menuBar.gui.getAlgorithms().getGraph().getNode(x));
+                }catch (Exception ex){
+                    JOptionPane.showMessageDialog(null,
+                            "Bad input, enter 'node id'(e.g: 5) or nodes ids that included in the graph");
+                }
+            }
+            //getEdge
+            if (menuBar.getEdge.isSelected()){
+                try{
+                    String sr[] =s.split(",");
+                    int src, dest;
+                    src = Integer.parseInt(sr[0]);
+                    dest= Integer.parseInt(sr[1]);
+                    JOptionPane.showMessageDialog(null, "Edge "+
+                            ""+ menuBar.gui.getAlgorithms().getGraph().getEdge(src,dest));
+                }catch (Exception ex){
+                    JOptionPane.showMessageDialog(null,
+                            "Bad input, enter 'source,destination' or nodes ids that included in the graph");
+                }
+            }
+          /*  if (menuBar.addNode.isSelected()){
+                try{
+
+                    menuBar.gui.getAlgorithms().getGraph().addNode();
+                }catch (Exception ex){
+
+                }
+            }*/
 
         }
     }
