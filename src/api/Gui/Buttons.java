@@ -1,5 +1,7 @@
 package api.Gui;
 
+import api.GeoLocation;
+import api.GeoLocationImpl;
 import api.NodeData;
 import api.NodeDataImpl;
 
@@ -116,7 +118,7 @@ public class Buttons implements ActionListener {
             if (menuBar.shortestPathDist.isSelected()) {
                 int src, dest;
                 try {
-                    String sr[] =s.split(",");
+                    String sr[] = s.split(",");
                     src = Integer.parseInt(sr[0]);
                     dest = Integer.parseInt(sr[1]);
                     JOptionPane.showMessageDialog(null, "The shortest path dist is: "
@@ -128,21 +130,21 @@ public class Buttons implements ActionListener {
                 }
             }
             //shortestPath
-            if (menuBar.shortestPath.isSelected()){
+            if (menuBar.shortestPath.isSelected()) {
                 List<NodeData> nodelist;
-                List<String> stringList= new ArrayList<>();
+                List<String> stringList = new ArrayList<>();
                 int src, dest;
                 try {
-                    String sr[] =s.split(",");
+                    String sr[] = s.split(",");
                     src = Integer.parseInt(sr[0]);
                     dest = Integer.parseInt(sr[1]);
                     nodelist = menuBar.gui.getAlgorithms().shortestPath(src, dest);
                     for (int i = 0; i < nodelist.size(); i++) {
-                        if (i==nodelist.size()-1){
-                            stringList.add(nodelist.get(i).getKey()+"");
+                        if (i == nodelist.size() - 1) {
+                            stringList.add(nodelist.get(i).getKey() + "");
                             continue;
                         }
-                        stringList.add(nodelist.get(i).getKey()+"->");
+                        stringList.add(nodelist.get(i).getKey() + "->");
 
                     }
                     JOptionPane.showMessageDialog(null, "The shortest path is: "
@@ -183,39 +185,87 @@ public class Buttons implements ActionListener {
                 }
             }
             //getNode
-            if (menuBar.getNode.isSelected()){
-                try{
+            if (menuBar.getNode.isSelected()) {
+                try {
                     int x = Integer.parseInt(s);
-                    JOptionPane.showMessageDialog(null, "Node "+x+
-                            ""+ menuBar.gui.getAlgorithms().getGraph().getNode(x));
-                }catch (Exception ex){
+                    JOptionPane.showMessageDialog(null, "Node " + x +
+                            " " + menuBar.gui.getAlgorithms().getGraph().getNode(x));
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null,
                             "Bad input, enter 'node id'(e.g: 5) or nodes ids that included in the graph");
                 }
             }
             //getEdge
-            if (menuBar.getEdge.isSelected()){
-                try{
-                    String sr[] =s.split(",");
+            if (menuBar.getEdge.isSelected()) {
+                try {
+                    String sr[] = s.split(",");
                     int src, dest;
                     src = Integer.parseInt(sr[0]);
-                    dest= Integer.parseInt(sr[1]);
-                    JOptionPane.showMessageDialog(null, "Edge "+
-                            ""+ menuBar.gui.getAlgorithms().getGraph().getEdge(src,dest));
+                    dest = Integer.parseInt(sr[1]);
+                    JOptionPane.showMessageDialog(null, "Edge " +
+                            "" + menuBar.gui.getAlgorithms().getGraph().getEdge(src, dest));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Bad input, enter 'source,destination' or nodes ids that included in the graph");
+                }
+            }
+            if (menuBar.addNode.isSelected()){
+                try{
+                    String sr[]= s.split(",");
+                    GeoLocation geoLocation = new GeoLocationImpl(Double.parseDouble(sr[0]),Double.parseDouble(sr[1]),0);
+                    int id = menuBar.gui.getAlgorithms().getGraph().nodeSize()+1;
+                    NodeData nodeData = new NodeDataImpl(geoLocation,id);
+                    menuBar.gui.getAlgorithms().getGraph().addNode(nodeData);
+                    JOptionPane.showMessageDialog(null, "Node " +id+
+                            " was added successfully to the graph");
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null,
                             "Bad input, enter 'source,destination' or nodes ids that included in the graph");
                 }
             }
-          /*  if (menuBar.addNode.isSelected()){
-                try{
-
-                    menuBar.gui.getAlgorithms().getGraph().addNode();
-                }catch (Exception ex){
-
+            //connect
+            if (menuBar.connect.isSelected()) {
+                try {
+                    String sr[] = s.split(",");
+                    int src, dest;
+                    double weight;
+                    src = Integer.parseInt(sr[0]);
+                    dest = Integer.parseInt(sr[1]);
+                    weight = Double.parseDouble(sr[2]);
+                    menuBar.gui.getAlgorithms().getGraph().connect(src,dest, weight);
+                    JOptionPane.showMessageDialog(null,"Connected from "+src+" to "+dest+" and weights"+weight );
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Bad input, enter 'source,destination' or nodes ids that included in the graph");
                 }
-            }*/
+            }
+            //remove node
+            if (menuBar.removeNode.isSelected()){
+                try {
+                    int x = Integer.parseInt(s);
+                    JOptionPane.showMessageDialog(null, "Node " + x +
+                            "" + menuBar.gui.getAlgorithms().getGraph().removeNode(x)+" was removed successfully ");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Bad input, enter 'node id'(e.g: 5) or nodes ids that included in the graph");
+                }
+            }
+            //remove edge
+            if (menuBar.removeEdge.isSelected()){
+                try {
+                    String sr[] = s.split(",");
+                    int src, dest;
+                    src = Integer.parseInt(sr[0]);
+                    dest = Integer.parseInt(sr[1]);
+                    JOptionPane.showMessageDialog(null,"The edge "+src+" to "+dest+""
+                            +menuBar.gui.getAlgorithms().getGraph().removeEdge(src,dest)+" was removed successfully");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Bad input, enter 'source,destination' or nodes ids that included in the graph");
+                }
+            }
 
         }
+
     }
 }
