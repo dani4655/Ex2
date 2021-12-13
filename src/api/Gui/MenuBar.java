@@ -1,9 +1,17 @@
 package api.Gui;
 
+import api.GeoLocation;
+import api.GeoLocationImpl;
+import api.NodeData;
+import api.NodeDataImpl;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Iterator;
 
 public class MenuBar extends JFrame {
     protected GraphGUI gui;
@@ -17,7 +25,7 @@ public class MenuBar extends JFrame {
     JTextField textField;
     JButton enterButton;
     JLabel label;
-    JPanel menuPanel,paintPanel, file;
+    JPanel menuPanel, paintPanel, file;
     ImageIcon icon;
 
     // ____________________________
@@ -45,6 +53,7 @@ public class MenuBar extends JFrame {
     JMenuItem paint;
 
 
+
     public MenuBar(String filename) {
         buttons = new Buttons(this);
         menuBar = new JMenuBar();
@@ -68,7 +77,6 @@ public class MenuBar extends JFrame {
 //        Paint.add(paint);
 
         //Algo Graph:
-
         isConnected = new JButton("isConnected");
         center = new JButton("center");
         shortestPathDist = new JRadioButton("shortestPathDist");
@@ -82,14 +90,6 @@ public class MenuBar extends JFrame {
         buttonGroup.add(save);
         buttonGroup.add(load);
 
-//        menuBar.add(AlgoGraphMenu);
-//        AlgoGraphMenu.add(isConnected);
-//        AlgoGraphMenu.add(shortestPathDist);
-//        AlgoGraphMenu.add(shortestPath);
-//        AlgoGraphMenu.add(center);
-//        AlgoGraphMenu.add(tsp);
-//        AlgoGraphMenu.add(save);
-//        AlgoGraphMenu.add(load);
 
         //Graph:
         getNode = new JRadioButton("GetNode");
@@ -121,26 +121,8 @@ public class MenuBar extends JFrame {
         add(menuPanel);
         text();
 
-//        menuBar.add(graphMenu);
-//        graphMenu.add(getNode);
-//        graphMenu.add(getEdge);
-//        graphMenu.add(addNode);
-//        graphMenu.add(connect);
-//        graphMenu.add(removeNode);
-//        graphMenu.add(removeEdge);
-//        graphMenu.add(nodeSize);
-//        graphMenu.add(edgeSize);
-//        graphMenu.add(getMC);
-
-
-/*        isConnected.addActionListener(this);
-        load.addActionListener(this);
-        save.addActionListener(this);
-        shortestPath.addActionListener(this);
-        shortestPathDist.addActionListener(this);
-        button.addActionListener(this);*/
-
     }
+
     public String getFilename() {
         return filename;
     }
@@ -154,7 +136,7 @@ public class MenuBar extends JFrame {
         graphPanel.setBounds(5, 5, 5, 5);
 //        graphPanel.setBackground(new Color(56, 13, 91));
 //        AlgoGraphPanel.setBackground(new Color(77, 24, 110));
-
+        paintPanel.setBackground(new Color(17, 185, 215));
 
 
         nodeSize.addActionListener(buttons);
@@ -208,7 +190,6 @@ public class MenuBar extends JFrame {
         file.setBounds(5, 5, 5, 5);
 
 
-
     }
 
     public void setComponents() {
@@ -231,37 +212,9 @@ public class MenuBar extends JFrame {
             }
         });
 
-        this.add(label);
+        menuPanel.add(label);
         menuPanel.add(textField);
     }
-/*
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String s = textField.getText();
-        if (e.getSource() == button) {
-            System.out.println(s);
-        }
-        if (e.getSource() == paint) {
-
-        }
-        if (e.getSource() == load) {
-            text();
-            label.setText("Enter file name");
-        }
-        if (e.getSource() == save) {
-            text();
-
-            label.setText("Enter file name");
-        }
-        if (e.getSource() == shortestPathDist) {
-            text();
-            label.setText("Enter source and destination (x,y)");
-        }
-        if (e.getSource() == shortestPath) {
-            text();
-            label.setText("Enter source and destination (x,y)");
-        }
-    }*/
 
 
     public static void main(String[] args) {

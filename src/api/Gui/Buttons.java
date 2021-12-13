@@ -1,9 +1,6 @@
 package api.Gui;
 
-import api.GeoLocation;
-import api.GeoLocationImpl;
-import api.NodeData;
-import api.NodeDataImpl;
+import api.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -60,10 +57,10 @@ public class Buttons implements ActionListener {
             menuBar.label.setText("Enter source and destination (x,y)");
         if (menuBar.tsp.isSelected())
             menuBar.label.setText("Enter list of nodes");
-        if (menuBar.addNode.isSelected())
-            menuBar.label.setText("Enter node id");
+//        if (menuBar.addNode.isSelected())
+//            menuBar.label.setText("Enter node id");
         if (menuBar.connect.isSelected())
-            menuBar.label.setText("Enter two node ids (x,y)");
+            menuBar.label.setText("Enter two node ids and weight (x,y,w)");
         if (menuBar.getNode.isSelected())
             menuBar.label.setText("Enter node id");
         if (menuBar.getEdge.isSelected())
@@ -72,6 +69,12 @@ public class Buttons implements ActionListener {
             menuBar.label.setText("Enter node id");
         if (menuBar.removeEdge.isSelected())
             menuBar.label.setText("Enter two node ids (x,y)");
+        //addNode
+        if (menuBar.addNode.isSelected()){
+            menuBar.gui.setChange(true);
+        }
+        else
+            menuBar.gui.setChange(false);
         //nodeSize
         if (e.getSource() == menuBar.nodeSize) {
             int x = menuBar.gui.getAlgorithms().getGraph().nodeSize();
@@ -94,12 +97,13 @@ public class Buttons implements ActionListener {
         if (e.getSource() == menuBar.center) {
             int x = menuBar.gui.getAlgorithms().center().getKey();
             JOptionPane.showMessageDialog(null, "Graph center is node: " + x);
+            menuBar.gui.paintGraph(menuBar.gui.getGraphics());
 //            else
 //                JOptionPane.showMessageDialog(null, "Graph have no center");
         }
         if (e.getSource() == menuBar.enterButton) {
             //load:
-            if (menuBar.load.isSelected() && e.getSource() == menuBar.enterButton) {
+            if (menuBar.load.isSelected()) {
                 if (menuBar.gui.getAlgorithms().load(s)) {
                     JOptionPane.showMessageDialog(null, "You have load the file: \"" + s + "\"");
                     menuBar.gui.paintGraph(menuBar.gui.getGraphics());
@@ -209,7 +213,8 @@ public class Buttons implements ActionListener {
                             "Bad input, enter 'source,destination' or nodes ids that included in the graph");
                 }
             }
-            if (menuBar.addNode.isSelected()){
+            //addNode
+/*            if (menuBar.addNode.isSelected()){
                 try{
                     String sr[]= s.split(",");
                     GeoLocation geoLocation = new GeoLocationImpl(Double.parseDouble(sr[0]),Double.parseDouble(sr[1]),0);
@@ -218,11 +223,12 @@ public class Buttons implements ActionListener {
                     menuBar.gui.getAlgorithms().getGraph().addNode(nodeData);
                     JOptionPane.showMessageDialog(null, "Node " +id+
                             " was added successfully to the graph");
+                    menuBar.gui.paintGraph(menuBar.gui.getGraphics());
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null,
                             "Bad input, enter 'source,destination' or nodes ids that included in the graph");
                 }
-            }
+            }*/
             //connect
             if (menuBar.connect.isSelected()) {
                 try {
@@ -233,6 +239,7 @@ public class Buttons implements ActionListener {
                     dest = Integer.parseInt(sr[1]);
                     weight = Double.parseDouble(sr[2]);
                     menuBar.gui.getAlgorithms().getGraph().connect(src,dest, weight);
+                    menuBar.gui.paintGraph(menuBar.gui.getGraphics());
                     JOptionPane.showMessageDialog(null,"Connected from "+src+" to "+dest+" and weights"+weight );
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null,
@@ -243,8 +250,11 @@ public class Buttons implements ActionListener {
             if (menuBar.removeNode.isSelected()){
                 try {
                     int x = Integer.parseInt(s);
+                    NodeData a = menuBar.gui.getAlgorithms().getGraph().removeNode(x);
+                    menuBar.gui.paintGraph(menuBar.gui.getGraphics());
                     JOptionPane.showMessageDialog(null, "Node " + x +
-                            "" + menuBar.gui.getAlgorithms().getGraph().removeNode(x)+" was removed successfully ");
+                            "" + a +" was removed successfully ");
+
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null,
                             "Bad input, enter 'node id'(e.g: 5) or nodes ids that included in the graph");
@@ -257,8 +267,11 @@ public class Buttons implements ActionListener {
                     int src, dest;
                     src = Integer.parseInt(sr[0]);
                     dest = Integer.parseInt(sr[1]);
+                    EdgeData a = menuBar.gui.getAlgorithms().getGraph().removeEdge(src,dest);
+                    menuBar.gui.paintGraph(menuBar.gui.getGraphics());
                     JOptionPane.showMessageDialog(null,"The edge "+src+" to "+dest+""
-                            +menuBar.gui.getAlgorithms().getGraph().removeEdge(src,dest)+" was removed successfully");
+                            +a+" was removed successfully");
+
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null,
                             "Bad input, enter 'source,destination' or nodes ids that included in the graph");

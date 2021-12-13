@@ -66,21 +66,13 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         int num = graph.nodeSize();
         if (num == 0)
             return true;
-        LinkedList<Integer> queue = new LinkedList<Integer>();
         int v = graph.nodeIter().next().getKey();
-        HashMap<Integer, Integer> color = new HashMap<>(); //0 = white, 1 = gray, 2 = black
-        Iterator<NodeData> iter = graph.nodeIter();
+        DirectedWeightedGraph ng = this.copy();
+        ng = dijkstra(ng.getNode(v), ng);
+        Iterator<NodeData> iter = ng.nodeIter();
         while (iter.hasNext()) { //add all nodes and set to 0
-            int n = iter.next().getKey();
-            color.put(n, 0);
-        }
-        color.remove(v);
-        color.put(v, 1); //gray
-        queue.add(v);
-        BFS(queue, color, this.graph);
-
-        for (int i : color.keySet()) {
-            if (color.get(i) == 0)
+            NodeData n = iter.next();
+            if (n.getWeight() == Integer.MAX_VALUE)
                 return false;
         }
         if (!transpose())
@@ -89,6 +81,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         return true;
     }
 
+/*
     private boolean BFS(LinkedList<Integer> queue, HashMap<Integer, Integer> color, DirectedWeightedGraph g) {
         if (queue.isEmpty())
             return true;
@@ -106,6 +99,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         color.put(v, 3); //black
         return BFS(queue, color, this.graph);
     }
+*/
 
     private boolean transpose() {
         Iterator<EdgeData> ei = graph.edgeIter();
@@ -119,27 +113,18 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             EdgeData e = ei.next();
             g.connect(e.getDest(), e.getSrc(), e.getWeight());
         }
-        LinkedList<Integer> q = new LinkedList<Integer>();
         int v = g.nodeIter().next().getKey();
-        HashMap<Integer, Integer> color = new HashMap<>(); //0 = white, 1 = gray, 2 = black
+        g = dijkstra(g.getNode(v), g);
         Iterator<NodeData> iter = g.nodeIter(); //add all nodes and set to 0
         while (iter.hasNext()) {
-            int n = iter.next().getKey();
-            color.put(n, 0);
-        }
-        color.remove(v);
-        color.put(v, 1); //gray
-        q.add(v);
-        BFS(q, color, g);
-        for (int i : color.keySet()) {
-            if (color.get(i) == 0)
+            NodeData n = iter.next();
+            if (n.getWeight() == Integer.MAX_VALUE)
                 return false;
         }
         return true;
     }
 
-    private DirectedWeightedGraph dijkstra(NodeData src) {
-        DirectedWeightedGraph ng = this.copy();
+    private DirectedWeightedGraph dijkstra(NodeData src, DirectedWeightedGraph ng) {
         maxValue(ng);
         ng.getNode(src.getKey()).setWeight(0);
         LinkedList<NodeData> q = new LinkedList<NodeData>();
@@ -192,7 +177,8 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
     public double shortestPathDist(int src, int dest) {
         if (src == dest)
             return 0.0;
-        DirectedWeightedGraph ng = dijkstra(this.graph.getNode(src));
+        DirectedWeightedGraph ng = this.copy();
+        ng = dijkstra(this.graph.getNode(src), ng);
         if (ng.getNode(src) == null || ng.getNode(dest) == null)
             return -1;
         int a = dest;
@@ -212,7 +198,8 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             list.add(graph.getNode(src));
             return list;
         }
-        DirectedWeightedGraph ng = dijkstra(this.graph.getNode(src));
+        DirectedWeightedGraph ng = this.copy();
+        ng = dijkstra(this.graph.getNode(src), ng);
         int a = dest;
         list.add(ng.getNode(dest));
         while (a != src) {
@@ -253,6 +240,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
                 ans = i;
             }
         }
+        graph.getNode(ans).setTag(5);
         return graph.getNode(ans);
     }
 
@@ -271,7 +259,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             index++;
         }
         double[][] mat = new double[N][N];
-        //make all INF and zero if node to node
+        //make all INF and zero (if node to node)
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 mat[i][j] = inf;
