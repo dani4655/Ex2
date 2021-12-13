@@ -55,7 +55,7 @@ use functions on the graph with the buttons on the right
 
 ![img.png](img.png)
 
-##Algorithms running times
+## Algorithms running times
 
 the times were taken in my laptop, it can change in any computer
 ![img_3.png](img_3.png)
@@ -67,3 +67,4 @@ like in the picture bellow.
 ![img_5.png](img_5.png)
 <br>
 After running successfully it will look like that:
+![img_6.png](img_6.png)
