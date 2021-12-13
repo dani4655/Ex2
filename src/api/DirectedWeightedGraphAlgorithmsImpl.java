@@ -118,7 +118,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         Iterator<NodeData> iter = g.nodeIter(); //add all nodes and set to 0
         while (iter.hasNext()) {
             NodeData n = iter.next();
-            if (n.getWeight() == Integer.MAX_VALUE)
+            if (n.getTag() == Integer.MAX_VALUE)
                 return false;
         }
         return true;
@@ -134,17 +134,35 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             q.add(n);
         }
         while (!q.isEmpty()) {
-            NodeData cn = q.poll();
-            if (q.peek() != null && q.peek().getWeight() < ng.getNode(src.getKey()).getWeight()) {
-                q.add(ng.getNode(src.getKey()));
-                cn = q.poll();
-            }
+            NodeData cn = ng.getNode(listMin(q));
+            q.remove(cn);
             Iterator<EdgeData> e = ng.edgeIter(cn.getKey());
             while (e.hasNext()) {
                 relax(e.next(), ng);
             }
         }
         return ng;
+    }
+
+
+    private int listMin(LinkedList<NodeData> q) {
+        LinkedList<NodeData> qu = new LinkedList<>();
+        NodeData n = q.poll();
+        qu.add(n);
+        int key = n.getKey();
+        double min = n.getWeight();
+        while (!q.isEmpty()) {
+            n = q.poll();
+            qu.add(n);
+            if (n.getWeight() < min) {
+                min = n.getWeight();
+                key = n.getKey();
+            }
+        }
+        while (!qu.isEmpty()) {
+            q.add(qu.poll());
+        }
+        return key;
     }
 
     /**

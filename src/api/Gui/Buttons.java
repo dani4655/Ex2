@@ -47,8 +47,8 @@ public class Buttons implements ActionListener {
         String s = menuBar.textField.getText();
         String b = e.getActionCommand();
         // Algo Graph:
-        if (menuBar.load.isSelected())
-            menuBar.label.setText("Enter file name");
+//        if (menuBar.load.isSelected())
+//            menuBar.label.setText("Enter file name");
         if (menuBar.save.isSelected())
             menuBar.label.setText("Enter file name");
         if (menuBar.shortestPathDist.isSelected())
@@ -101,16 +101,26 @@ public class Buttons implements ActionListener {
 //            else
 //                JOptionPane.showMessageDialog(null, "Graph have no center");
         }
+        if (e.getSource() == menuBar.load) {
+            int res = menuBar.fileChooser.showOpenDialog(null);
+            if (res == JFileChooser.APPROVE_OPTION) {
+                String f = menuBar.fileChooser.getSelectedFile().getAbsolutePath();
+                if (menuBar.gui.getAlgorithms().load(f)) {
+                    menuBar.gui.paintGraph(menuBar.gui.getGraphics());
+                    JOptionPane.showMessageDialog(null, "You have load the file from: \"" + f + "\"");
+                }
+            }
+        }
         if (e.getSource() == menuBar.enterButton) {
             //load:
-            if (menuBar.load.isSelected()) {
+/*            if (menuBar.load.isSelected()) {
                 if (menuBar.gui.getAlgorithms().load(s)) {
                     JOptionPane.showMessageDialog(null, "You have load the file: \"" + s + "\"");
                     menuBar.gui.paintGraph(menuBar.gui.getGraphics());
                 } else
                     JOptionPane.showConfirmDialog(null, menuBar.icon);
 //                JOptionPane.showMessageDialog(null, "load failed.");
-            }
+            }*/
             //save:
             if (menuBar.save.isSelected()) {
                 if (menuBar.gui.getAlgorithms().save(s))

@@ -27,6 +27,8 @@ public class GraphGUI extends JPanel implements MouseListener {
         this.setBackground(new Color(28, 210, 210));
         this.setMaximumSize(new Dimension(1000, 1000));
         setLayout(null);
+        algorithms.load(this.menuBar.getFilename());
+
 
     }
 

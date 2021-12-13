@@ -48,13 +48,15 @@ public class MenuBar extends JFrame {
     JButton center;
     JRadioButton tsp;
     JRadioButton save;
-    JRadioButton load;
+    JButton load;
     // ____________________________
-    JMenuItem paint;
+    JFileChooser fileChooser;
 
 
 
     public MenuBar(String filename) {
+        this.filename = filename;
+        gui = new GraphGUI(this);
         buttons = new Buttons(this);
         menuBar = new JMenuBar();
         textField = new JTextField();
@@ -62,7 +64,7 @@ public class MenuBar extends JFrame {
         enterButton = new JButton("Enter");
         icon = new ImageIcon("data/myIcon.jpeg");
         ButtonGroup buttonGroup = new ButtonGroup();
-        this.filename = filename;
+        fileChooser = new JFileChooser();
 
         this.setJMenuBar(menuBar);
         this.setVisible(true);
@@ -83,12 +85,12 @@ public class MenuBar extends JFrame {
         shortestPath = new JRadioButton("shortestPath");
         tsp = new JRadioButton("tsp");
         save = new JRadioButton("Save");
-        load = new JRadioButton("Load");
+        load = new JButton("Load");
         buttonGroup.add(shortestPathDist);
         buttonGroup.add(shortestPath);
         buttonGroup.add(tsp);
         buttonGroup.add(save);
-        buttonGroup.add(load);
+//        buttonGroup.add(load);
 
 
         //Graph:
@@ -165,6 +167,8 @@ public class MenuBar extends JFrame {
         AlgoGraphPanel = new JPanel();
         AlgoGraphPanel.setLayout(new GridLayout(1, 2));
         AlgoGraphPanel.setBounds(5, 5, 5, 5);
+        load.addActionListener(buttons);
+        AlgoGraphPanel.add(load);
         isConnected.addActionListener(buttons);
         AlgoGraphPanel.add(isConnected);
         center.addActionListener(buttons);
@@ -177,8 +181,6 @@ public class MenuBar extends JFrame {
         AlgoGraphPanel.add(tsp);
         save.addActionListener(buttons);
         AlgoGraphPanel.add(save);
-        load.addActionListener(buttons);
-        AlgoGraphPanel.add(load);
         menuPanel.add(AlgoGraphPanel);
 
         // ---------------------------------
@@ -193,7 +195,6 @@ public class MenuBar extends JFrame {
     }
 
     public void setComponents() {
-        gui = new GraphGUI(this);
         gui.setAlignmentX(BOTTOM_ALIGNMENT);
         gui.setSize(1, 1);
         add(gui);
