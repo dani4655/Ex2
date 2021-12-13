@@ -3,6 +3,12 @@ import api.*;
 //this class generate a random graph
 public class GraphGenerator {
     private static int id=0;
+
+    /**function that creates a new random graph in a chosen size
+     *
+     * @param size
+     * @return
+     */
     public static DirectedWeightedGraph GraphGenerator(int size){
         DirectedWeightedGraph graph = new DirectedWeightedGraphImpl();
         for (int i = 0; i < size; i++) {
@@ -19,6 +25,19 @@ public class GraphGenerator {
         }
         return graph;
     }
+
+    /**this function generates and save a graph to json
+     *
+     * @param size
+     */
+    public static void generateAndSave(int size){
+        DirectedWeightedGraph graph = new DirectedWeightedGraphImpl();
+        graph = GraphGenerator(size);
+        DirectedWeightedGraphAlgorithms graphAlgorithms = new DirectedWeightedGraphAlgorithmsImpl();
+        graphAlgorithms.init(graph);
+        graphAlgorithms.save(size+"Nodes.json");
+    }
+
     private static GeoLocationImpl generateGeoLocation(){
         double x = Math.random()*1000;
         double y = Math.random()*1000;
