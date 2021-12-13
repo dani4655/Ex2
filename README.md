@@ -67,3 +67,4 @@ like in the picture bellow.
 ![img_5.png](img_5.png)
 <br>
 After running successfully it will look like that:
+![img_6.png](img_6.png)
