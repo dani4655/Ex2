@@ -83,11 +83,10 @@ public class GraphGUI extends JPanel implements MouseListener {
             }
 
         }
-        System.out.println(b);
         n = new NodeDataImpl(g, b);
 //        a.add(n);
         graph.addNode(n);
-        paintGraph(getGraphics());
+        paintComponent(getGraphics());
 
     }
 
@@ -130,7 +129,7 @@ public class GraphGUI extends JPanel implements MouseListener {
         g.fillPolygon(xpoints, ypoints, 3);
     }
 
-    public void paintGraph(Graphics g) {
+    public void paintComponent(Graphics g) {
         Iterator<NodeData> iter = algorithms.getGraph().nodeIter();
         NodeData n = iter.next();
         double xmin = n.getLocation().x();

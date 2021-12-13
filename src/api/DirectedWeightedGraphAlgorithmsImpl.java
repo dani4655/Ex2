@@ -2,6 +2,7 @@ package api;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
 import com.google.gson.*;
 
@@ -173,6 +174,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
     private void relax(EdgeData e, DirectedWeightedGraph ng) {
         if (ng.getNode(e.getDest()).getWeight() > ng.getNode(e.getSrc()).getWeight() + e.getWeight()) {
             ng.getNode(e.getDest()).setWeight(ng.getNode(e.getSrc()).getWeight() + e.getWeight());
+            this.graph.getNode(e.getDest()).setWeight(ng.getNode(e.getSrc()).getWeight() + e.getWeight());
             ng.getNode(e.getDest()).setTag(e.getSrc());
         }
     }
@@ -309,6 +311,44 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
+        List<NodeData> list = new LinkedList<>();
+        List<NodeData> tempList;
+        List<NodeData> temp2List = new LinkedList<>();
+        int s = cities.remove(0).getKey();
+        double dis = Double.POSITIVE_INFINITY;
+        while (!cities.isEmpty()) {
+            boolean t = false;
+            int index = 0;
+            double min = Double.POSITIVE_INFINITY;
+            for (int i = 0; i < cities.size(); i++) {
+                tempList = shortestPath(s,cities.get(i).getKey());
+                dis = this.graph.getNode(cities.get(i).getKey()).getWeight();
+                if (dis < min) {
+                    t = true;
+                    min = dis;
+                    temp2List = tempList;
+                    index = i; //to set the next node(and to remove)
+                }
+            }
+            if (t) {
+                s = cities.get(index).getKey();
+                cities.remove(index);
+                list.addAll(temp2List);
+            }
+            deleteDupes(list);
+        }
+
+        return list;
+    }
+    private List<NodeData> deleteDupes(List<NodeData> list){
+        for (int i = 0; i < list.size()-1; i++) {
+            if (list.get(i).getKey() == list.get(i+1).getKey())
+                list.remove(i);
+        }
+        return list;
+    }
+/*    public List<NodeData> tsp(List<NodeData> cities) {
+        //last tsp
         int N = cities.size();
         List<NodeData> list = new LinkedList<>();
         List<NodeData> ans = new LinkedList<>();
@@ -327,11 +367,11 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
                 ng.connect(k, n, graph.getEdge(k, n).getWeight());
             }
         }
-        DirectedWeightedGraphAlgorithms d = new DirectedWeightedGraphAlgorithmsImpl(ng);
+*//*        DirectedWeightedGraphAlgorithms d = new DirectedWeightedGraphAlgorithmsImpl(ng);
         if (!d.isConnected())
-            return null;
+            return null;*//*
         // make HashMaps for nodes:
-        HashMap<Integer, Integer> valToInt = new HashMap<>();
+*//*        HashMap<Integer, Integer> valToInt = new HashMap<>();
         HashMap<Integer, Integer> intToVal = new HashMap<>();
         Iterator<NodeData> iter = ng.nodeIter();
         int i = 0;
@@ -343,16 +383,17 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         }
         double cost = 0;
         // rec fun:
-        DirectedWeightedGraphAlgorithms a = new DirectedWeightedGraphAlgorithmsImpl(ng);
+
         double[][] mat = matFromList(valToInt, intToVal, ng);
-        double min = Double.POSITIVE_INFINITY;
+        double min = Double.POSITIVE_INFINITY;*//*
+        DirectedWeightedGraphAlgorithms a = new DirectedWeightedGraphAlgorithmsImpl(ng);
         for (int j = 0; j < N; j++) {
             int s = cities.get(j).getKey();
-            cost = 0;
+//            cost = 0;
             tsprec(a.copy(), list, N, s);
             if (list.size() == N) {
                 return list;
-/*                for (int k = 0; k < N - 1; k++) {
+*//*                for (int k = 0; k < N - 1; k++) {
                     cost += ng.getEdge(list.get(k).getKey(), list.get(k + 1).getKey()).getWeight();
                 }
                 if (cost < min) {
@@ -361,14 +402,35 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
                         ans.add(list.get(k));
                     }
                 }
-                list.clear();*/
+                list.clear();*//*
             }
         }
-        System.out.println(cost);
         return ans;
-    }
-
+    }*/
     private List<NodeData> tsprec(DirectedWeightedGraph ng, List<NodeData> list, int N, int s) {
+        if (list.size() == N)
+            return list;
+        ng = dijkstra(ng.getNode(s), ng);
+        Iterator<EdgeData> iter = ng.edgeIter(s);
+        int key = -1;
+        while (iter.hasNext()) { //go over all the src edges
+
+            EdgeData e = iter.next();
+            key = e.getDest();
+            if (list.contains(ng.getNode(key))) //if visited - pass
+                continue;
+            list.add(ng.getNode(key));
+            tsprec(ng, list, N, key);
+            if (list.size() == N)
+                return list;
+        }
+        if (list.contains(ng.getNode(s))) {// remove
+            list.remove(ng.getNode(s));
+
+        }
+        return list;
+    }
+/*    private List<NodeData> tsprec(DirectedWeightedGraph ng, List<NodeData> list, int N, int s) {
         if (list.size() == N)
             return list;
         Iterator<EdgeData> iter = ng.edgeIter(s);
@@ -389,7 +451,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
         }
         return list;
-    }
+    }*/
 //        if (list.size() == N)
 //            return list;
 ///*        if (ng.getNode(s) != null)

@@ -50,5 +50,4 @@ public class GraphGenerator {
         id=id+1;
         return nodeData;
     }
-
 }

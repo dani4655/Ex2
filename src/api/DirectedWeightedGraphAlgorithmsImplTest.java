@@ -152,6 +152,14 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void tsp() {
+        boazBenMoshe.load("data/G1.json");
+        List<NodeData> l = new LinkedList<>();
+        Iterator<NodeData> iter = boazBenMoshe.getGraph().nodeIter();
+        while (iter.hasNext()) {
+            NodeData n = iter.next();
+            l.add(n);
+        }
+        assertEquals(l,l);
     }
 
     @Test
