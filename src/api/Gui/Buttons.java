@@ -5,6 +5,7 @@ import api.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,34 +14,8 @@ public class Buttons implements ActionListener {
 
     public Buttons(MenuBar menuBar) {
         this.menuBar = menuBar;
-/*        this.menuBar.isConnected.addActionListener(this);
-        this.menuBar.load.addActionListener(this);
-        this.menuBar.save.addActionListener(this);
-        this.menuBar.shortestPath.addActionListener(this);
-        this.menuBar.shortestPathDist.addActionListener(this);
-        this.menuBar.button.addActionListener(this);*/
     }
 
-/*    public void text() {
-        menuBar.textField.setBounds(50, 100, 250, 20);
-        menuBar.label = new JLabel();
-        menuBar.label.setBounds(50, 50, 222, 20);
-        menuBar.button = new JButton("Enter");
-        menuBar.button.setBounds(50, 150, 95, 30);
-        menuBar.button.addActionListener(this);
-        menuBar.textField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER && menuBar.textField.equals("hi")) {
-                    System.out.println("hi");
-                }
-            }
-        });
-
-        menuBar.add(menuBar.label);
-        menuBar.add(menuBar.textField);
-        menuBar.add(menuBar.button);
-    }*/
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -101,7 +76,9 @@ public class Buttons implements ActionListener {
 //            else
 //                JOptionPane.showMessageDialog(null, "Graph have no center");
         }
+        //load
         if (e.getSource() == menuBar.load) {
+            menuBar.fileChooser.setCurrentDirectory(new File("data"));
             int res = menuBar.fileChooser.showOpenDialog(null);
             if (res == JFileChooser.APPROVE_OPTION) {
                 String f = menuBar.fileChooser.getSelectedFile().getAbsolutePath();
