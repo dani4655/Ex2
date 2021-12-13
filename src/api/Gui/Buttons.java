@@ -72,7 +72,7 @@ public class Buttons implements ActionListener {
         if (e.getSource() == menuBar.center) {
             int x = menuBar.gui.getAlgorithms().center().getKey();
             JOptionPane.showMessageDialog(null, "Graph center is node: " + x);
-            menuBar.gui.paintGraph(menuBar.gui.getGraphics());
+            menuBar.gui.paintComponent(menuBar.gui.getGraphics());
 //            else
 //                JOptionPane.showMessageDialog(null, "Graph have no center");
         }
@@ -83,7 +83,7 @@ public class Buttons implements ActionListener {
             if (res == JFileChooser.APPROVE_OPTION) {
                 String f = menuBar.fileChooser.getSelectedFile().getAbsolutePath();
                 if (menuBar.gui.getAlgorithms().load(f)) {
-                    menuBar.gui.paintGraph(menuBar.gui.getGraphics());
+                    menuBar.gui.paintComponent(menuBar.gui.getGraphics());
                     JOptionPane.showMessageDialog(null, "You have load the file from: \"" + f + "\"");
                 }
             }
@@ -226,7 +226,7 @@ public class Buttons implements ActionListener {
                     dest = Integer.parseInt(sr[1]);
                     weight = Double.parseDouble(sr[2]);
                     menuBar.gui.getAlgorithms().getGraph().connect(src,dest, weight);
-                    menuBar.gui.paintGraph(menuBar.gui.getGraphics());
+                    menuBar.gui.paintComponent(menuBar.gui.getGraphics());
                     JOptionPane.showMessageDialog(null,"Connected from "+src+" to "+dest+" and weights"+weight );
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null,
@@ -238,7 +238,7 @@ public class Buttons implements ActionListener {
                 try {
                     int x = Integer.parseInt(s);
                     NodeData a = menuBar.gui.getAlgorithms().getGraph().removeNode(x);
-                    menuBar.gui.paintGraph(menuBar.gui.getGraphics());
+                    menuBar.gui.paintComponent(menuBar.gui.getGraphics());
                     JOptionPane.showMessageDialog(null, "Node " + x +
                             "" + a +" was removed successfully ");
 
@@ -255,7 +255,7 @@ public class Buttons implements ActionListener {
                     src = Integer.parseInt(sr[0]);
                     dest = Integer.parseInt(sr[1]);
                     EdgeData a = menuBar.gui.getAlgorithms().getGraph().removeEdge(src,dest);
-                    menuBar.gui.paintGraph(menuBar.gui.getGraphics());
+                    menuBar.gui.paintComponent(menuBar.gui.getGraphics());
                     JOptionPane.showMessageDialog(null,"The edge "+src+" to "+dest+""
                             +a+" was removed successfully");
 

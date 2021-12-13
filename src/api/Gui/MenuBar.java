@@ -116,6 +116,7 @@ public class MenuBar extends JFrame {
         add(menuPanel);
         text();
 
+
     }
 
     public String getFilename() {
@@ -183,6 +184,7 @@ public class MenuBar extends JFrame {
         file = new JPanel();
         file.setLayout(new GridLayout(1, 1));
         file.setBounds(5, 5, 5, 5);
+
 
 
     }
